@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bjpages.github.io/sanandoando/sitemap.xml
