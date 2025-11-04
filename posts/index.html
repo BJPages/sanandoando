@@ -5,20 +5,18 @@
   <title>Artículos – Sanación & Narcisismo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Listado de artículos sobre sanación emocional y relaciones con narcisistas.">
-  <link rel="canonical" href="https://TU_USUARIO.github.io/TU_REPO/posts/">
+  <link rel="canonical" href="https://bjpages.github.io/sanandoando/posts/">
   <link rel="stylesheet" href="../assets/css/main.css" />
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
 </head>
 <body class="is-preload">
+  <!-- Header global -->
+  <div id="site-header"></div>
+
   <section id="header">
     <div class="inner">
       <h1>Artículos</h1>
       <p>Guías, reflexiones y herramientas prácticas.</p>
-      <ul class="actions">
-        <li><a href="../" class="button">Inicio</a></li>
-        <li><a href="../recursos/" class="button">Recursos</a></li>
-        <li><a href="../sobre/" class="button">Sobre mí</a></li>
-      </ul>
       <input id="search" type="search" placeholder="Buscar…" style="margin-top:1rem;max-width:420px;width:100%;padding:.8rem;border-radius:8px;border:1px solid #ddd;">
     </div>
   </section>
@@ -54,10 +52,13 @@
       if(q){ q.addEventListener('input', function(){
         var term=this.value.toLowerCase();
         Array.prototype.forEach.call(list, function(li){
-          var t=li.getAttribute('data-title')||''; li.style.display = t.indexOf(term)>-1 ? '' : 'none';
+          var t=(li.getAttribute('data-title')||'') + ' ' + (li.textContent||'');
+          li.style.display = t.toLowerCase().indexOf(term)>-1 ? '' : 'none';
         });
       });}
     })();
   </script>
+  <!-- Header global -->
+  <script src="../assets/js/header.js" data-base="/sanandoando/"></script>
 </body>
 </html>
