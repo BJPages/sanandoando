@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Sobre mí – Sanación & Narcisismo</title>
+  <title>Sobre nosotros – Sanación & Narcisismo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Quién soy, propósito del sitio y cómo contacto.">
+  <meta name="description" content="Quiénes somos, propósito del sitio y cómo contactarnos.">
   <link rel="canonical" href="https://bjpages.github.io/sanandoando/sobre/">
   <link rel="stylesheet" href="../assets/css/main.css" />
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
@@ -15,40 +15,56 @@
 
   <section id="header">
     <div class="inner">
-      <h1>Sobre mí</h1>
-      <p>Propósito, valores y cómo nació este proyecto.</p>
+      <h1>Sobre nosotros</h1>
+      <p>Nuestro propósito, valores y cómo nació este proyecto.</p>
     </div>
   </section>
 
   <section id="one" class="main style1">
     <div class="container">
-      <h2>Hola, soy Francisco</h2>
+      <h2>Quiénes somos</h2>
       <p>
-        Creo en la información clara y gratuita para sanar. Este sitio reúne guías breves,
-        herramientas y reflexiones que me hubiera gustado tener a mano cuando más lo necesité.
+        Somos <strong>Sanando Ando</strong>, un grupo de personas comprometidas con la difusión de
+        información clara, empática y gratuita sobre <strong>sanación emocional</strong> y
+        <strong>relaciones con rasgos narcisistas</strong>.
       </p>
+      <p>
+        Creemos en el poder del conocimiento compartido para recuperar la paz, los límites y la
+        confianza en uno mismo. Este espacio está pensado como una biblioteca viva de guías,
+        reflexiones y herramientas prácticas para acompañarte en tu proceso.
+      </p>
+
       <h3>Contacto</h3>
       <p>
-        Escríbeme a <a href="mailto:tucorreo@ejemplo.com">tucorreo@ejemplo.com</a>.<br>
-        Red social principal: <a href="#" target="_blank" rel="noopener">enlace</a>.
+        Por ahora, nuestro único canal de comunicación es Facebook:<br>
+        <a href="https://www.facebook.com/sanando.ando.ya" target="_blank" rel="noopener">
+          facebook.com/sanando.ando.ya
+        </a>
       </p>
     </div>
   </section>
 
-  <section id="footer">
-    <ul class="copyright">
-      <li>© <span id="year"></span> Sanación & Narcisismo</li>
-    </ul>
-  </section>
+  <!-- Footer global -->
+  <div id="site-footer"></div>
 
+  <!-- Scripts de la plantilla -->
   <script src="../assets/js/jquery.min.js"></script>
   <script src="../assets/js/jquery.scrolly.min.js"></script>
   <script src="../assets/js/browser.min.js"></script>
   <script src="../assets/js/breakpoints.min.js"></script>
   <script src="../assets/js/util.js"></script>
   <script src="../assets/js/main.js"></script>
-  <script> (function(){var y=document.getElementById('year'); if(y){y.textContent=new Date().getFullYear();}})(); </script>
-  <!-- Header global -->
+  <script>
+    (function(){
+      var y=document.getElementById('year');
+      if(y){ y.textContent=new Date().getFullYear(); }
+    })();
+  </script>
+
+  <!-- Header y Footer globales -->
   <script src="../assets/js/header.js" data-base="/sanandoando/"></script>
+  <script src="../assets/js/footer.js"
+          data-base="/sanandoando/"
+          data-facebook="https://www.facebook.com/sanando.ando.ya"></script>
 </body>
 </html>
