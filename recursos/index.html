@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <title>Recursos – Sanación & Narcisismo</title>
@@ -9,30 +9,71 @@
   <link rel="stylesheet" href="../assets/css/main.css" />
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
   <style>
+    /* ====== Tema claro/oscuro con CSS vars ====== */
+    :root{
+      --bg:#ffffff;
+      --card:#ffffff;
+      --text:#1c1d26;
+      --muted:#666;
+      --line:#eee;
+      --btn:#f9f9fb;
+      --btn-border:#ddd;
+      --accent:#1c1d26;
+      --pill:#f4f6f8;
+      --pill-border:#e5e5e5;
+      --ok:#00c170;
+      --link:#1b8cff;
+    }
+    html[data-theme="dark"]{
+      --bg:#0f1115;
+      --card:#12141a;
+      --text:#e9ecf1;
+      --muted:#a0a6b0;
+      --line:#1f232b;
+      --btn:#151922;
+      --btn-border:#242a34;
+      --accent:#e9ecf1;
+      --pill:#19202a;
+      --pill-border:#243042;
+      --ok:#1fd39f;
+      --link:#72b7ff;
+    }
+    body{ background:var(--bg); color:var(--text); }
+
     /* Estilos suaves para widgets */
-    .tool-card{ background:#fff; border:1px solid #eee; border-radius:14px; padding:16px; margin:14px 0; box-shadow:0 8px 20px rgba(0,0,0,.03); }
+    .tool-card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin:14px 0; box-shadow:0 8px 20px rgba(0,0,0,.03); }
     .tool-title{ margin-top:0; }
-    .pill{ display:inline-block; padding:.25rem .6rem; border-radius:999px; border:1px solid #e5e5e5; font-size:.85rem; color:#444; }
-    .meter{ height:10px; background:#eee; border-radius:999px; overflow:hidden; }
+    .pill{ display:inline-block; padding:.25rem .6rem; border-radius:999px; border:1px solid var(--pill-border); font-size:.85rem; color:var(--text); background:var(--pill); }
+    .meter{ height:10px; background:var(--line); border-radius:999px; overflow:hidden; }
     .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#00c170,#ffb800,#ff5f5f); transition:width .25s ease; }
     .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     @media(max-width:800px){ .row2{ grid-template-columns:1fr; } }
-    .small{ font-size:.9rem; color:#666; }
-    .muted{ color:#777; }
+    .small{ font-size:.9rem; color:var(--muted); }
+    .muted{ color:var(--muted); }
     .inline-controls > *{ margin-right:8px; margin-bottom:8px; }
-    .btn{ display:inline-block; padding:.6rem .9rem; border-radius:10px; border:1px solid #ddd; background:#f9f9fb; cursor:pointer; }
-    .btn.primary{ background:#1c1d26; color:#fff; border-color:#1c1d26; }
-    .btn.ghost{ background:#fff; }
-    .copy-ok{ color:#00c170; font-weight:700; margin-left:8px; display:none; }
+    .btn{ display:inline-block; padding:.6rem .9rem; border-radius:10px; border:1px solid var(--btn-border); background:var(--btn); cursor:pointer; color:var(--text); }
+    .btn.primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
+    .btn.ghost{ background:transparent; }
+    .copy-ok{ color:var(--ok); font-weight:700; margin-left:8px; display:none; }
     /* Box breathing */
     .box-wrap{ display:flex; justify-content:center; align-items:center; height:220px; }
-    .box{ width:120px; height:120px; border:2px solid #1c1d26; border-radius:14px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .box{ width:120px; height:120px; border:2px solid var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; font-weight:700; }
     .phase{ margin-top:10px; text-align:center; font-weight:600; }
     .kudos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
     .badge{ padding:.2rem .5rem; background:#f2f7ff; border:1px solid #dfe8ff; border-radius:999px; font-size:.8rem; color:#355; }
+    html[data-theme="dark"] .badge{ background:#0c223a; border-color:#183a61; color:#cfe2ff; }
     /* Checklist tabla */
     .table{ width:100%; border-collapse:collapse; }
-    .table th, .table td{ border-bottom:1px solid #eee; padding:.5rem; text-align:left; }
+    .table th, .table td{ border-bottom:1px solid var(--line); padding:.5rem; text-align:left; }
+    /* Header row tweaks */
+    #res-header-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+    a{ color:var(--link); }
+    /* Print view: solo el contenido marcado con .printable */
+    @media print{
+      nav.nav-global, #site-header, #site-footer, .no-print, .btn, .inline-controls, .tool-card > .muted { display:none !important; }
+      .printable{ display:block !important; }
+      body{ background:#fff !important; color:#000 !important; }
+    }
   </style>
 </head>
 <body class="is-preload">
@@ -45,6 +86,10 @@
       <p>Herramientas prácticas para tu proceso, hechas para usarse aquí mismo.</p>
       <div class="pill">Funciona offline</div>
       <div class="pill">Guarda progreso local</div>
+      <div id="res-header-actions" class="no-print">
+        <button id="theme-toggle" class="btn">🌗 Modo oscuro</button>
+        <span class="small muted">Estadísticas locales: <span id="stats-line">—</span></span>
+      </div>
     </div>
   </section>
 
@@ -69,7 +114,14 @@
             <p id="flags-hint" class="muted"></p>
             <div class="inline-controls" style="margin-top:.5rem">
               <button class="btn ghost" id="flags-clear">Limpiar</button>
-              <button class="btn" id="flags-export">Exportar selección</button>
+              <button class="btn" id="flags-export">Exportar selección (JSON)</button>
+              <button class="btn" id="flags-print">Imprimir / Guardar PDF</button>
+            </div>
+            <!-- Vista imprimible -->
+            <div id="flags-printable" class="printable" style="display:none; margin-top:1rem;">
+              <h3>Checklist de banderas rojas (resumen)</h3>
+              <ul id="flags-print-list"></ul>
+              <p class="small">Generado: <span id="flags-print-date"></span></p>
             </div>
           </div>
         </div>
@@ -98,9 +150,16 @@
         </div>
         <p class="small muted" style="margin:.5rem 0 0">Tip: un límite es observable y medible (qué harás si se cruza).</p>
         <textarea id="b-output" rows="4" style="width:100%;margin-top:.75rem" placeholder="Aquí aparecerá tu límite..."></textarea>
-        <div style="margin-top:.5rem">
+        <div style="margin-top:.5rem" class="inline-controls">
           <button class="btn primary" id="b-copy">Copiar</button>
+          <button class="btn" id="b-print">Imprimir / Guardar PDF</button>
           <span id="b-copied" class="copy-ok">¡Copiado!</span>
+        </div>
+        <!-- Bloque imprimible -->
+        <div id="b-printable" class="printable" style="display:none; margin-top:1rem;">
+          <h3>Límite generado</h3>
+          <p id="b-print-text" style="white-space:pre-wrap"></p>
+          <p class="small">Generado: <span id="b-print-date"></span></p>
         </div>
       </div>
 
@@ -111,9 +170,17 @@
           <label>Fecha de inicio: <input type="date" id="s-start"></label>
           <button class="btn" id="s-save">Guardar</button>
           <button class="btn ghost" id="s-reset">Reiniciar</button>
+          <button class="btn" id="s-print">Imprimir progreso</button>
         </div>
         <p style="margin-top:.5rem">Llevas <strong id="s-days">0</strong> día(s). <span id="s-phrase" class="muted"></span></p>
         <div class="kudos" id="s-kudos"></div>
+        <!-- Imprimible -->
+        <div id="s-printable" class="printable" style="display:none; margin-top:1rem;">
+          <h3>Progreso de días</h3>
+          <p>Fecha de inicio: <span id="s-print-start">—</span></p>
+          <p>Días acumulados: <span id="s-print-days">0</span></p>
+          <p class="small">Generado: <span id="s-print-date"></span></p>
+        </div>
       </div>
 
       <!-- 4) RESPIRACIÓN 4-4-4 -->
@@ -150,6 +217,50 @@
 
   <!-- Lógica de herramientas -->
   <script>
+    // ====== Utilidades comunes ======
+    function saveStat(key){
+      try{
+        var k = 'sa_stats';
+        var obj = JSON.parse(localStorage.getItem(k) || '{}');
+        obj[key] = (obj[key] || 0) + 1;
+        localStorage.setItem(k, JSON.stringify(obj));
+        renderStats();
+      }catch(e){}
+    }
+    function renderStats(){
+      try{
+        var obj = JSON.parse(localStorage.getItem('sa_stats') || '{}');
+        var txt = [
+          'Checklist: ' + (obj.flags || 0),
+          'Límites: ' + (obj.boundaries || 0),
+          'Streak: ' + (obj.streak || 0),
+          'Respira: ' + (obj.breathe || 0)
+        ].join(' · ');
+        document.getElementById('stats-line').textContent = txt;
+      }catch(e){}
+    }
+    // Tema
+    (function(){
+      var html = document.documentElement;
+      var key = 'sa_theme';
+      function apply(theme){ html.setAttribute('data-theme', theme); }
+      function toggle(){
+        var cur = html.getAttribute('data-theme') || 'light';
+        var next = (cur === 'light' ? 'dark' : 'light');
+        apply(next); localStorage.setItem(key, next);
+      }
+      var saved = localStorage.getItem(key); if(saved) apply(saved);
+      var btn = document.getElementById('theme-toggle');
+      if(btn){
+        btn.addEventListener('click', toggle);
+        btn.textContent = (html.getAttribute('data-theme')==='dark'?'🌞 Modo claro':'🌗 Modo oscuro');
+        new MutationObserver(function(){
+          btn.textContent = (html.getAttribute('data-theme')==='dark'?'🌞 Modo claro':'🌗 Modo oscuro');
+        }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+      }
+      renderStats();
+    })();
+
     // ---------- 1) CHECKLIST DE BANDERAS ROJAS ----------
     (function(){
       var FLAGS = [
@@ -170,6 +281,9 @@
       var meter = document.getElementById('flags-meter');
       var score = document.getElementById('flags-score');
       var hint  = document.getElementById('flags-hint');
+      var printable = document.getElementById('flags-printable');
+      var plist = document.getElementById('flags-print-list');
+      var pdate = document.getElementById('flags-print-date');
 
       function render(){
         body.innerHTML = "";
@@ -184,6 +298,7 @@
             if (!cb.checked && idx>-1) saved.splice(idx,1);
             localStorage.setItem(key, JSON.stringify(saved));
             updateMeter();
+            saveStat('flags');
           });
           td2.appendChild(cb);
           tr.appendChild(td1); tr.appendChild(td2);
@@ -210,6 +325,19 @@
         a.href = URL.createObjectURL(blob);
         a.download = 'banderas_rojas.json';
         a.click();
+        saveStat('flags');
+      });
+      document.getElementById('flags-print').addEventListener('click', function(){
+        // Construir lista imprimible
+        plist.innerHTML = '';
+        var selected = saved.map(function(i){ return FLAGS[i]; });
+        if (selected.length === 0) { plist.innerHTML = '<li>(Sin elementos marcados)</li>'; }
+        else selected.forEach(function(t){ var li=document.createElement('li'); li.textContent=t; plist.appendChild(li); });
+        pdate.textContent = new Date().toLocaleString();
+        printable.style.display = 'block';
+        window.print();
+        setTimeout(function(){ printable.style.display='none'; }, 500);
+        saveStat('flags');
       });
       render();
     })();
@@ -241,15 +369,29 @@
       var s = document.getElementById('b-situation');
       var t = document.getElementById('b-tone');
       var out = document.getElementById('b-output');
+      var pwrap = document.getElementById('b-printable');
+      var ptext = document.getElementById('b-print-text');
+      var pdate = document.getElementById('b-print-date');
+
       function gen(){
         var txt = (TEMPLATES[s.value] && TEMPLATES[s.value][t.value]) || '';
         out.value = txt;
+        saveStat('boundaries');
       }
       document.getElementById('b-generate').addEventListener('click', gen);
       document.getElementById('b-copy').addEventListener('click', function(){
         out.select(); document.execCommand('copy');
         var ok = document.getElementById('b-copied'); ok.style.display='inline';
         setTimeout(function(){ ok.style.display='none'; }, 1400);
+        saveStat('boundaries');
+      });
+      document.getElementById('b-print').addEventListener('click', function(){
+        ptext.textContent = out.value || '(Sin contenido)';
+        pdate.textContent = new Date().toLocaleString();
+        pwrap.style.display = 'block';
+        window.print();
+        setTimeout(function(){ pwrap.style.display='none'; }, 500);
+        saveStat('boundaries');
       });
       gen();
     })();
@@ -261,6 +403,10 @@
       var daysEl = document.getElementById('s-days');
       var phrase = document.getElementById('s-phrase');
       var kudos = document.getElementById('s-kudos');
+      var pwrap = document.getElementById('s-printable');
+      var pstart = document.getElementById('s-print-start');
+      var pdays  = document.getElementById('s-print-days');
+      var pdate  = document.getElementById('s-print-date');
 
       function load(){
         var stored = localStorage.getItem(key);
@@ -285,12 +431,22 @@
           .join('');
       }
       document.getElementById('s-save').addEventListener('click', function(){
-        if (startInput.value){ localStorage.setItem(key, startInput.value); update(); }
+        if (startInput.value){ localStorage.setItem(key, startInput.value); update(); saveStat('streak'); }
       });
       document.getElementById('s-reset').addEventListener('click', function(){
-        localStorage.removeItem(key); startInput.value=''; update();
+        localStorage.removeItem(key); startInput.value=''; update(); saveStat('streak');
       });
-      startInput.addEventListener('change', update);
+      document.getElementById('s-print').addEventListener('click', function(){
+        var v = startInput.value;
+        pstart.textContent = v || '(sin fecha)';
+        pdays.textContent = document.getElementById('s-days').textContent;
+        pdate.textContent = new Date().toLocaleString();
+        pwrap.style.display = 'block';
+        window.print();
+        setTimeout(function(){ pwrap.style.display='none'; }, 500);
+        saveStat('streak');
+      });
+      startInput.addEventListener('change', function(){ update(); saveStat('streak'); });
       load();
     })();
 
@@ -318,6 +474,7 @@
       function start(){
         stop(); setPhase(0); tick();
         timer = setInterval(tick, 1000);
+        saveStat('breathe');
       }
       function stop(){
         if (timer) clearInterval(timer);
