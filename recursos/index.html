@@ -9,43 +9,27 @@
   <link rel="stylesheet" href="../assets/css/main.css" />
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
   <style>
-    /* ====== Tema claro/oscuro con CSS vars ====== */
     :root{
-      --bg:#ffffff;
-      --card:#ffffff;
-      --text:#1c1d26;
-      --muted:#666;
-      --line:#eee;
-      --btn:#f9f9fb;
-      --btn-border:#ddd;
-      --accent:#1c1d26;
-      --pill:#f4f6f8;
-      --pill-border:#e5e5e5;
-      --ok:#00c170;
-      --link:#1b8cff;
+      --bg:#ffffff; --card:#ffffff; --text:#1c1d26; --muted:#666; --line:#eee;
+      --btn:#f9f9fb; --btn-border:#ddd; --accent:#1c1d26; --pill:#f4f6f8; --pill-border:#e5e5e5; --ok:#00c170; --link:#1b8cff;
     }
     html[data-theme="dark"]{
-      --bg:#0f1115;
-      --card:#12141a;
-      --text:#e9ecf1;
-      --muted:#a0a6b0;
-      --line:#1f232b;
-      --btn:#151922;
-      --btn-border:#242a34;
-      --accent:#e9ecf1;
-      --pill:#19202a;
-      --pill-border:#243042;
-      --ok:#1fd39f;
-      --link:#72b7ff;
+      --bg:#0f1115; --card:#12141a; --text:#e9ecf1; --muted:#a0a6b0; --line:#1f232b;
+      --btn:#151922; --btn-border:#242a34; --accent:#e9ecf1; --pill:#19202a; --pill-border:#243042; --ok:#1fd39f; --link:#72b7ff;
     }
     body{ background:var(--bg); color:var(--text); }
 
-    /* Estilos suaves para widgets */
+    /* Tabs */
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin: 0 0 12px; }
+    .tab-btn { border:1px solid var(--btn-border); background:var(--btn); color:var(--text); padding:.6rem .9rem; border-radius:10px; cursor:pointer; }
+    .tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* Cards y controles */
     .tool-card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin:14px 0; box-shadow:0 8px 20px rgba(0,0,0,.03); }
     .tool-title{ margin-top:0; }
     .pill{ display:inline-block; padding:.25rem .6rem; border-radius:999px; border:1px solid var(--pill-border); font-size:.85rem; color:var(--text); background:var(--pill); }
-    .meter{ height:10px; background:var(--line); border-radius:999px; overflow:hidden; }
-    .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#00c170,#ffb800,#ff5f5f); transition:width .25s ease; }
     .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     @media(max-width:800px){ .row2{ grid-template-columns:1fr; } }
     .small{ font-size:.9rem; color:var(--muted); }
@@ -55,24 +39,28 @@
     .btn.primary{ background:var(--accent); color:#fff; border-color:var(--accent); }
     .btn.ghost{ background:transparent; }
     .copy-ok{ color:var(--ok); font-weight:700; margin-left:8px; display:none; }
-    /* Box breathing */
+    a{ color:var(--link); }
+
+    /* Checklist */
+    .table{ width:100%; border-collapse:collapse; }
+    .table th, .table td{ border-bottom:1px solid var(--line); padding:.5rem; text-align:left; }
+    .meter{ height:10px; background:var(--line); border-radius:999px; overflow:hidden; }
+    .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#00c170,#ffb800,#ff5f5f); transition:width .25s ease; }
+
+    /* Breath */
     .box-wrap{ display:flex; justify-content:center; align-items:center; height:220px; }
     .box{ width:120px; height:120px; border:2px solid var(--accent); border-radius:14px; display:flex; align-items:center; justify-content:center; font-weight:700; }
     .phase{ margin-top:10px; text-align:center; font-weight:600; }
+
     .kudos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
     .badge{ padding:.2rem .5rem; background:#f2f7ff; border:1px solid #dfe8ff; border-radius:999px; font-size:.8rem; color:#355; }
     html[data-theme="dark"] .badge{ background:#0c223a; border-color:#183a61; color:#cfe2ff; }
-    /* Checklist tabla */
-    .table{ width:100%; border-collapse:collapse; }
-    .table th, .table td{ border-bottom:1px solid var(--line); padding:.5rem; text-align:left; }
-    /* Header row tweaks */
-    #res-header-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; }
-    a{ color:var(--link); }
-    /* Print view: solo el contenido marcado con .printable */
+
+    /* Impresión: solo el objetivo marcado como print-target */
     @media print{
-      nav.nav-global, #site-header, #site-footer, .no-print, .btn, .inline-controls, .tool-card > .muted { display:none !important; }
-      .printable{ display:block !important; }
-      body{ background:#fff !important; color:#000 !important; }
+      body * { visibility:hidden !important; }
+      .print-target, .print-target * { visibility:visible !important; }
+      .print-target { position:relative !important; }
     }
   </style>
 </head>
@@ -86,115 +74,109 @@
       <p>Herramientas prácticas para tu proceso, hechas para usarse aquí mismo.</p>
       <div class="pill">Funciona offline</div>
       <div class="pill">Guarda progreso local</div>
-      <div id="res-header-actions" class="no-print">
+      <div class="inline-controls" style="margin-top:10px">
         <button id="theme-toggle" class="btn">🌗 Modo oscuro</button>
-        <span class="small muted">Estadísticas locales: <span id="stats-line">—</span></span>
       </div>
     </div>
   </section>
 
   <section id="one" class="main style1">
     <div class="container">
+      <!-- Tabs -->
+      <div class="tabs" role="tablist" aria-label="Herramientas">
+        <button class="tab-btn active" data-tab="tab-flags" role="tab" aria-selected="true">✅ Checklist</button>
+        <button class="tab-btn" data-tab="tab-boundaries" role="tab">🛡️ Límites</button>
+        <button class="tab-btn" data-tab="tab-streak" role="tab">📅 Días</button>
+        <button class="tab-btn" data-tab="tab-breathe" role="tab">🌬️ Respiración</button>
+      </div>
 
-      <!-- 1) CHECKLIST DE BANDERAS ROJAS -->
-      <div class="tool-card" id="tool-flags">
-        <h2 class="tool-title">Checklist de banderas rojas</h2>
-        <p class="muted">Marca señales que hayas notado. El indicador se actualiza automáticamente. <span class="small">Tu selección se guarda en este navegador.</span></p>
-        <div class="row2">
-          <div>
-            <table class="table">
-              <thead><tr><th>Señal</th><th>¿La has visto?</th></tr></thead>
-              <tbody id="flags-body"></tbody>
-            </table>
-          </div>
-          <div>
-            <p><strong>Indicador de riesgo</strong></p>
-            <div class="meter"><span id="flags-meter"></span></div>
-            <p id="flags-score" class="small" style="margin-top:.5rem">0 de 0 marcadas</p>
-            <p id="flags-hint" class="muted"></p>
-            <div class="inline-controls" style="margin-top:.5rem">
-              <button class="btn ghost" id="flags-clear">Limpiar</button>
-              <button class="btn" id="flags-export">Exportar selección (JSON)</button>
-              <button class="btn" id="flags-print">Imprimir / Guardar PDF</button>
+      <!-- Panel: Checklist -->
+      <div id="tab-flags" class="tab-panel active" role="tabpanel">
+        <div class="tool-card" id="tool-flags">
+          <h2 class="tool-title">Checklist de banderas rojas</h2>
+          <p class="muted">Marca señales que hayas notado. El indicador se actualiza automáticamente. <span class="small">Tu selección se guarda en este navegador.</span></p>
+          <div class="row2">
+            <div>
+              <table class="table">
+                <thead><tr><th>Señal</th><th>¿La has visto?</th></tr></thead>
+                <tbody id="flags-body"></tbody>
+              </table>
             </div>
-            <!-- Vista imprimible -->
-            <div id="flags-printable" class="printable" style="display:none; margin-top:1rem;">
-              <h3>Checklist de banderas rojas (resumen)</h3>
-              <ul id="flags-print-list"></ul>
-              <p class="small">Generado: <span id="flags-print-date"></span></p>
+            <div>
+              <p><strong>Indicador de riesgo</strong></p>
+              <div class="meter"><span id="flags-meter"></span></div>
+              <p id="flags-score" class="small" style="margin-top:.5rem">0 de 0 marcadas</p>
+              <p id="flags-hint" class="muted"></p>
+              <div class="inline-controls" style="margin-top:.5rem">
+                <button class="btn ghost" id="flags-clear">Limpiar</button>
+                <button class="btn" id="flags-print">Imprimir / Guardar PDF</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 2) GENERADOR DE LÍMITES -->
-      <div class="tool-card" id="tool-boundaries">
-        <h2 class="tool-title">Generador de límites (frase lista para copiar)</h2>
-        <div class="inline-controls">
-          <label>Situación:
-            <select id="b-situation">
-              <option value="tono">Cuando el tono se vuelve despectivo</option>
-              <option value="mensajes">Mensajes fuera de horario</option>
-              <option value="invade">Invasión de privacidad</option>
-              <option value="promesas">Promesas incumplidas repetidas</option>
-            </select>
-          </label>
-          <label>Tono:
-            <select id="b-tone">
-              <option value="neutral">Neutral y claro</option>
-              <option value="firme">Firme</option>
-              <option value="empatico">Empático</option>
-            </select>
-          </label>
-          <button class="btn" id="b-generate">Generar</button>
-        </div>
-        <p class="small muted" style="margin:.5rem 0 0">Tip: un límite es observable y medible (qué harás si se cruza).</p>
-        <textarea id="b-output" rows="4" style="width:100%;margin-top:.75rem" placeholder="Aquí aparecerá tu límite..."></textarea>
-        <div style="margin-top:.5rem" class="inline-controls">
-          <button class="btn primary" id="b-copy">Copiar</button>
-          <button class="btn" id="b-print">Imprimir / Guardar PDF</button>
-          <span id="b-copied" class="copy-ok">¡Copiado!</span>
-        </div>
-        <!-- Bloque imprimible -->
-        <div id="b-printable" class="printable" style="display:none; margin-top:1rem;">
-          <h3>Límite generado</h3>
-          <p id="b-print-text" style="white-space:pre-wrap"></p>
-          <p class="small">Generado: <span id="b-print-date"></span></p>
+      <!-- Panel: Límites -->
+      <div id="tab-boundaries" class="tab-panel" role="tabpanel">
+        <div class="tool-card" id="tool-boundaries">
+          <h2 class="tool-title">Generador de límites (frase lista para copiar)</h2>
+          <div class="inline-controls">
+            <label>Situación:
+              <select id="b-situation">
+                <option value="tono">Cuando el tono se vuelve despectivo</option>
+                <option value="mensajes">Mensajes fuera de horario</option>
+                <option value="invade">Invasión de privacidad</option>
+                <option value="promesas">Promesas incumplidas repetidas</option>
+              </select>
+            </label>
+            <label>Tono:
+              <select id="b-tone">
+                <option value="neutral">Neutral y claro</option>
+                <option value="firme">Firme</option>
+                <option value="empatico">Empático</option>
+              </select>
+            </label>
+            <button class="btn" id="b-generate">Generar</button>
+          </div>
+          <p class="small muted" style="margin:.5rem 0 0">Tip: un límite es observable y medible (qué harás si se cruza).</p>
+          <textarea id="b-output" rows="4" style="width:100%;margin-top:.75rem" placeholder="Aquí aparecerá tu límite..."></textarea>
+          <div style="margin-top:.5rem" class="inline-controls">
+            <button class="btn primary" id="b-copy">Copiar</button>
+            <button class="btn" id="b-print">Imprimir / Guardar PDF</button>
+            <span id="b-copied" class="copy-ok">¡Copiado!</span>
+          </div>
         </div>
       </div>
 
-      <!-- 3) CONTADOR DE DÍAS / STREAK -->
-      <div class="tool-card" id="tool-streak">
-        <h2 class="tool-title">Contador de días (No-Contact / hábito)</h2>
-        <div class="inline-controls">
-          <label>Fecha de inicio: <input type="date" id="s-start"></label>
-          <button class="btn" id="s-save">Guardar</button>
-          <button class="btn ghost" id="s-reset">Reiniciar</button>
-          <button class="btn" id="s-print">Imprimir progreso</button>
-        </div>
-        <p style="margin-top:.5rem">Llevas <strong id="s-days">0</strong> día(s). <span id="s-phrase" class="muted"></span></p>
-        <div class="kudos" id="s-kudos"></div>
-        <!-- Imprimible -->
-        <div id="s-printable" class="printable" style="display:none; margin-top:1rem;">
-          <h3>Progreso de días</h3>
-          <p>Fecha de inicio: <span id="s-print-start">—</span></p>
-          <p>Días acumulados: <span id="s-print-days">0</span></p>
-          <p class="small">Generado: <span id="s-print-date"></span></p>
+      <!-- Panel: Días -->
+      <div id="tab-streak" class="tab-panel" role="tabpanel">
+        <div class="tool-card" id="tool-streak">
+          <h2 class="tool-title">Contador de días (No-Contact / hábito)</h2>
+          <div class="inline-controls">
+            <label>Fecha de inicio: <input type="date" id="s-start"></label>
+            <button class="btn" id="s-save">Guardar</button>
+            <button class="btn ghost" id="s-reset">Reiniciar</button>
+            <button class="btn" id="s-print">Imprimir progreso</button>
+          </div>
+          <p style="margin-top:.5rem">Llevas <strong id="s-days">0</strong> día(s). <span id="s-phrase" class="muted"></span></p>
+          <div class="kudos" id="s-kudos"></div>
         </div>
       </div>
 
-      <!-- 4) RESPIRACIÓN 4-4-4 -->
-      <div class="tool-card" id="tool-breathe">
-        <h2 class="tool-title">Respiración 4-4-4 (box breathing)</h2>
-        <div class="box-wrap">
-          <div class="box" id="br-box">4</div>
+      <!-- Panel: Respiración -->
+      <div id="tab-breathe" class="tab-panel" role="tabpanel">
+        <div class="tool-card" id="tool-breathe">
+          <h2 class="tool-title">Respiración 4-4-4 (box breathing)</h2>
+          <div class="box-wrap">
+            <div class="box" id="br-box">4</div>
+          </div>
+          <div class="phase" id="br-phase">Inhala</div>
+          <div style="text-align:center;margin-top:.5rem">
+            <button class="btn primary" id="br-start">Iniciar</button>
+            <button class="btn ghost" id="br-stop">Detener</button>
+          </div>
+          <p class="small muted" style="text-align:center;margin-top:.5rem">Ciclo: 4s Inhala · 4s Mantén · 4s Exhala. Repite 3–5 minutos.</p>
         </div>
-        <div class="phase" id="br-phase">Inhala</div>
-        <div style="text-align:center;margin-top:.5rem">
-          <button class="btn primary" id="br-start">Iniciar</button>
-          <button class="btn ghost" id="br-stop">Detener</button>
-        </div>
-        <p class="small muted" style="text-align:center;margin-top:.5rem">Ciclo: 4s Inhala · 4s Mantén · 4s Exhala. Repite 3–5 minutos.</p>
       </div>
 
     </div>
@@ -215,53 +197,53 @@
           data-base="/sanandoando/"
           data-facebook="https://www.facebook.com/sanando.ando.ya"></script>
 
-  <!-- Lógica de herramientas -->
   <script>
-    // ====== Utilidades comunes ======
-    function saveStat(key){
-      try{
-        var k = 'sa_stats';
-        var obj = JSON.parse(localStorage.getItem(k) || '{}');
-        obj[key] = (obj[key] || 0) + 1;
-        localStorage.setItem(k, JSON.stringify(obj));
-        renderStats();
-      }catch(e){}
-    }
-    function renderStats(){
-      try{
-        var obj = JSON.parse(localStorage.getItem('sa_stats') || '{}');
-        var txt = [
-          'Checklist: ' + (obj.flags || 0),
-          'Límites: ' + (obj.boundaries || 0),
-          'Streak: ' + (obj.streak || 0),
-          'Respira: ' + (obj.breathe || 0)
-        ].join(' · ');
-        document.getElementById('stats-line').textContent = txt;
-      }catch(e){}
-    }
-    // Tema
+    // ====== Tabs ======
     (function(){
-      var html = document.documentElement;
-      var key = 'sa_theme';
-      function apply(theme){ html.setAttribute('data-theme', theme); }
-      function toggle(){
-        var cur = html.getAttribute('data-theme') || 'light';
-        var next = (cur === 'light' ? 'dark' : 'light');
-        apply(next); localStorage.setItem(key, next);
+      var btns = document.querySelectorAll('.tab-btn');
+      var panels = document.querySelectorAll('.tab-panel');
+      function activate(id){
+        btns.forEach(b=>b.classList.toggle('active', b.getAttribute('data-tab')===id));
+        panels.forEach(p=>p.classList.toggle('active', p.id===id));
       }
-      var saved = localStorage.getItem(key); if(saved) apply(saved);
-      var btn = document.getElementById('theme-toggle');
-      if(btn){
-        btn.addEventListener('click', toggle);
-        btn.textContent = (html.getAttribute('data-theme')==='dark'?'🌞 Modo claro':'🌗 Modo oscuro');
-        new MutationObserver(function(){
-          btn.textContent = (html.getAttribute('data-theme')==='dark'?'🌞 Modo claro':'🌗 Modo oscuro');
-        }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-      }
-      renderStats();
+      btns.forEach(b=>{
+        b.addEventListener('click', ()=>activate(b.getAttribute('data-tab')));
+      });
+      // hash deep-link (#tab=tab-flags)
+      var hash = (location.hash||'').replace('#tab=','');
+      if (hash && document.getElementById(hash)) activate(hash);
     })();
 
-    // ---------- 1) CHECKLIST DE BANDERAS ROJAS ----------
+    // ====== Tema ======
+    (function(){
+      var html = document.documentElement, key='sa_theme';
+      function apply(t){ html.setAttribute('data-theme', t); }
+      var saved = localStorage.getItem(key); if(saved) apply(saved);
+      var btn = document.getElementById('theme-toggle');
+      btn.addEventListener('click', function(){
+        var cur = html.getAttribute('data-theme')||'light';
+        var next = cur==='light'?'dark':'light';
+        apply(next); localStorage.setItem(key,next);
+      });
+      btn.textContent = (html.getAttribute('data-theme')==='dark'?'🌞 Modo claro':'🌗 Modo oscuro');
+      new MutationObserver(function(){
+        btn.textContent = (html.getAttribute('data-theme')==='dark'?'🌞 Modo claro':'🌗 Modo oscuro');
+      }).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+    })();
+
+    // ====== PRINT helper: imprime SOLO un nodo ======
+    function printOnly(node){
+      // Marca el nodo como objetivo de impresión
+      node.classList.add('print-target');
+      // Fuerza relayout y dispara impresión
+      setTimeout(function(){
+        window.print();
+        // Limpia marca después
+        setTimeout(function(){ node.classList.remove('print-target'); }, 200);
+      }, 50);
+    }
+
+    // ---------- 1) CHECKLIST ----------
     (function(){
       var FLAGS = [
         "Minimiza o ridiculiza tus emociones",
@@ -281,9 +263,7 @@
       var meter = document.getElementById('flags-meter');
       var score = document.getElementById('flags-score');
       var hint  = document.getElementById('flags-hint');
-      var printable = document.getElementById('flags-printable');
-      var plist = document.getElementById('flags-print-list');
-      var pdate = document.getElementById('flags-print-date');
+      var card  = document.getElementById('tool-flags');
 
       function render(){
         body.innerHTML = "";
@@ -298,7 +278,6 @@
             if (!cb.checked && idx>-1) saved.splice(idx,1);
             localStorage.setItem(key, JSON.stringify(saved));
             updateMeter();
-            saveStat('flags');
           });
           td2.appendChild(cb);
           tr.appendChild(td1); tr.appendChild(td2);
@@ -318,31 +297,21 @@
       document.getElementById('flags-clear').addEventListener('click', function(){
         saved = []; localStorage.setItem(key, "[]"); render();
       });
-      document.getElementById('flags-export').addEventListener('click', function(){
-        var selected = saved.map(function(i){ return FLAGS[i]; });
-        var blob = new Blob([JSON.stringify({selected:selected, total:FLAGS.length, date:new Date().toISOString()}, null, 2)], {type:"application/json"});
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'banderas_rojas.json';
-        a.click();
-        saveStat('flags');
-      });
       document.getElementById('flags-print').addEventListener('click', function(){
-        // Construir lista imprimible
-        plist.innerHTML = '';
+        // Para impresión: añadimos lista marcada al final temporalmente
+        var list = document.createElement('div');
         var selected = saved.map(function(i){ return FLAGS[i]; });
-        if (selected.length === 0) { plist.innerHTML = '<li>(Sin elementos marcados)</li>'; }
-        else selected.forEach(function(t){ var li=document.createElement('li'); li.textContent=t; plist.appendChild(li); });
-        pdate.textContent = new Date().toLocaleString();
-        printable.style.display = 'block';
-        window.print();
-        setTimeout(function(){ printable.style.display='none'; }, 500);
-        saveStat('flags');
+        list.innerHTML = '<h3>Checklist (resumen)</h3>' + (selected.length
+          ? '<ul>'+selected.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>'
+          : '<p>(Sin elementos marcados)</p>');
+        card.appendChild(list);
+        printOnly(card);
+        setTimeout(function(){ card.removeChild(list); }, 300);
       });
       render();
     })();
 
-    // ---------- 2) GENERADOR DE LÍMITES ----------
+    // ---------- 2) LÍMITES ----------
     (function(){
       var TEMPLATES = {
         tono: {
@@ -369,44 +338,36 @@
       var s = document.getElementById('b-situation');
       var t = document.getElementById('b-tone');
       var out = document.getElementById('b-output');
-      var pwrap = document.getElementById('b-printable');
-      var ptext = document.getElementById('b-print-text');
-      var pdate = document.getElementById('b-print-date');
+      var card = document.getElementById('tool-boundaries');
 
       function gen(){
-        var txt = (TEMPLATES[s.value] && TEMPLATES[s.value][t.value]) || '';
-        out.value = txt;
-        saveStat('boundaries');
+        out.value = (TEMPLATES[s.value] && TEMPLATES[s.value][t.value]) || '';
       }
       document.getElementById('b-generate').addEventListener('click', gen);
       document.getElementById('b-copy').addEventListener('click', function(){
         out.select(); document.execCommand('copy');
         var ok = document.getElementById('b-copied'); ok.style.display='inline';
         setTimeout(function(){ ok.style.display='none'; }, 1400);
-        saveStat('boundaries');
       });
       document.getElementById('b-print').addEventListener('click', function(){
-        ptext.textContent = out.value || '(Sin contenido)';
-        pdate.textContent = new Date().toLocaleString();
-        pwrap.style.display = 'block';
-        window.print();
-        setTimeout(function(){ pwrap.style.display='none'; }, 500);
-        saveStat('boundaries');
+        // Crea bloque de impresión solo con el texto generado
+        var tmp = document.createElement('div');
+        tmp.innerHTML = '<h3>Límite generado</h3><p style="white-space:pre-wrap">'+(out.value||'(Sin contenido)')+'</p>';
+        card.appendChild(tmp);
+        printOnly(card);
+        setTimeout(function(){ card.removeChild(tmp); }, 300);
       });
       gen();
     })();
 
-    // ---------- 3) CONTADOR DE DÍAS ----------
+    // ---------- 3) DÍAS ----------
     (function(){
       var key = 'sa_streak_start';
       var startInput = document.getElementById('s-start');
       var daysEl = document.getElementById('s-days');
       var phrase = document.getElementById('s-phrase');
       var kudos = document.getElementById('s-kudos');
-      var pwrap = document.getElementById('s-printable');
-      var pstart = document.getElementById('s-print-start');
-      var pdays  = document.getElementById('s-print-days');
-      var pdate  = document.getElementById('s-print-date');
+      var card = document.getElementById('tool-streak');
 
       function load(){
         var stored = localStorage.getItem(key);
@@ -431,26 +392,26 @@
           .join('');
       }
       document.getElementById('s-save').addEventListener('click', function(){
-        if (startInput.value){ localStorage.setItem(key, startInput.value); update(); saveStat('streak'); }
+        if (startInput.value){ localStorage.setItem(key, startInput.value); update(); }
       });
       document.getElementById('s-reset').addEventListener('click', function(){
-        localStorage.removeItem(key); startInput.value=''; update(); saveStat('streak');
+        localStorage.removeItem(key); startInput.value=''; update();
       });
       document.getElementById('s-print').addEventListener('click', function(){
-        var v = startInput.value;
-        pstart.textContent = v || '(sin fecha)';
-        pdays.textContent = document.getElementById('s-days').textContent;
-        pdate.textContent = new Date().toLocaleString();
-        pwrap.style.display = 'block';
-        window.print();
-        setTimeout(function(){ pwrap.style.display='none'; }, 500);
-        saveStat('streak');
+        // Imprime solo este bloque con datos clave
+        var tmp = document.createElement('div');
+        tmp.innerHTML = '<h3>Progreso de días</h3>'
+          + '<p>Fecha de inicio: '+(startInput.value||'(sin fecha)')+'</p>'
+          + '<p>Días acumulados: '+(daysEl.textContent||'0')+'</p>';
+        card.appendChild(tmp);
+        printOnly(card);
+        setTimeout(function(){ card.removeChild(tmp); }, 300);
       });
-      startInput.addEventListener('change', function(){ update(); saveStat('streak'); });
+      startInput.addEventListener('change', update);
       load();
     })();
 
-    // ---------- 4) RESPIRACIÓN 4-4-4 ----------
+    // ---------- 4) RESPIRACIÓN ----------
     (function(){
       var box = document.getElementById('br-box');
       var phaseEl = document.getElementById('br-phase');
@@ -474,7 +435,6 @@
       function start(){
         stop(); setPhase(0); tick();
         timer = setInterval(tick, 1000);
-        saveStat('breathe');
       }
       function stop(){
         if (timer) clearInterval(timer);
