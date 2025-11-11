@@ -63,6 +63,22 @@
       .print-target { position:relative !important; }
     }
   </style>
+  <style>
+  /* Forzar que los checkboxes sean clicables/visibles pese a los estilos del tema */
+  input[type="checkbox"]{
+    -webkit-appearance: checkbox !important;
+    appearance: checkbox !important;
+    position: static !important;
+    opacity: 1 !important;
+    display: inline-block !important;
+    width: 18px; height: 18px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  /* Para que toda la fila responda al click (opcional pero cómodo) */
+  .flag-row{ cursor: pointer; }
+</style>
+
 </head>
 <body class="is-preload">
   <!-- Header global -->
@@ -270,6 +286,8 @@
         body.innerHTML = "";
         FLAGS.forEach(function(txt, i){
           var tr = document.createElement('tr');
+          tr.className = 'flag-row';
+          
           var td1 = document.createElement('td'); td1.textContent = txt;
           var td2 = document.createElement('td');
           var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = saved.indexOf(i)>-1;
@@ -279,9 +297,16 @@
             if (!cb.checked && idx>-1) saved.splice(idx,1);
             localStorage.setItem(key, JSON.stringify(saved));
             updateMeter();
+            e.stopPropagation();
           });
           td2.appendChild(cb);
           tr.appendChild(td1); tr.appendChild(td2);
+
+          tr.addEventListener('click', function(){              // ✅ click en la fila alterna el valor
+            cb.checked = !cb.checked;
+            cb.dispatchEvent(new Event('change'));
+          });
+          
           body.appendChild(tr);
         });
         updateMeter();
@@ -447,5 +472,6 @@
   </script>
 </body>
 </html>
+
 
 
