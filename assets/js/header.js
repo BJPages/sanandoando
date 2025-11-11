@@ -62,13 +62,14 @@
   function setCookie(name, value, days) {
     try {
       var d = new Date();
-      d.setTime(d.getTime() + (days*24*60*60*1000));
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
       document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + d.toUTCString() + '; path=/';
     } catch(e){}
   }
   function getCookie(name) {
     try {
-      var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\\[\\]\\\\/+^])/g, '\\$1') + '=([^;]*)'));
+      var pattern = "(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\/+^])/g, "\\$1") + "=([^;]*)";
+      var m = document.cookie.match(new RegExp(pattern));
       return m ? decodeURIComponent(m[1]) : null;
     } catch(e){ return null; }
   }
