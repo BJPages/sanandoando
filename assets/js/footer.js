@@ -46,7 +46,6 @@
       '<section id="footer">' +
         iconHTML() +
         '<ul class="copyright">' +
-          '<li>© <span>' + year + '</span> Sanación &amp; Narcisismo</li>' +
           '<li>Design: <a href="http://html5up.net" target="_blank" rel="noopener">HTML5 UP</a></li>' +
         '</ul>' +
         adHost +
@@ -126,3 +125,4 @@
     boot();
   }
 })();
+
