@@ -291,12 +291,13 @@
           var td1 = document.createElement('td'); td1.textContent = txt;
           var td2 = document.createElement('td');
           var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = saved.indexOf(i)>-1;
-          cb.addEventListener('change', function(){
+          cb.addEventListener('change', function(ev){
             var idx = saved.indexOf(i);
             if (cb.checked && idx===-1) saved.push(i);
             if (!cb.checked && idx>-1) saved.splice(idx,1);
             localStorage.setItem(key, JSON.stringify(saved));
             updateMeter();
+            ev.stopPropagation();
           });
           td2.appendChild(cb);
           tr.appendChild(td1); tr.appendChild(td2);
@@ -471,6 +472,7 @@
   </script>
 </body>
 </html>
+
 
 
 
