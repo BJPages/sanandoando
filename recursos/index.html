@@ -4,10 +4,36 @@
   <meta charset="utf-8" />
   <title>Recursos – Sanación & Narcisismo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Libros, guías y herramientas recomendadas para la sanación emocional.">
+  <meta name="description" content="Herramientas gratuitas: checklist de banderas rojas, generador de límites, contador de días y respiración guiada.">
   <link rel="canonical" href="https://bjpages.github.io/sanandoando/recursos/">
   <link rel="stylesheet" href="../assets/css/main.css" />
   <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+  <style>
+    /* Estilos suaves para widgets */
+    .tool-card{ background:#fff; border:1px solid #eee; border-radius:14px; padding:16px; margin:14px 0; box-shadow:0 8px 20px rgba(0,0,0,.03); }
+    .tool-title{ margin-top:0; }
+    .pill{ display:inline-block; padding:.25rem .6rem; border-radius:999px; border:1px solid #e5e5e5; font-size:.85rem; color:#444; }
+    .meter{ height:10px; background:#eee; border-radius:999px; overflow:hidden; }
+    .meter > span{ display:block; height:100%; width:0%; background:linear-gradient(90deg,#00c170,#ffb800,#ff5f5f); transition:width .25s ease; }
+    .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:800px){ .row2{ grid-template-columns:1fr; } }
+    .small{ font-size:.9rem; color:#666; }
+    .muted{ color:#777; }
+    .inline-controls > *{ margin-right:8px; margin-bottom:8px; }
+    .btn{ display:inline-block; padding:.6rem .9rem; border-radius:10px; border:1px solid #ddd; background:#f9f9fb; cursor:pointer; }
+    .btn.primary{ background:#1c1d26; color:#fff; border-color:#1c1d26; }
+    .btn.ghost{ background:#fff; }
+    .copy-ok{ color:#00c170; font-weight:700; margin-left:8px; display:none; }
+    /* Box breathing */
+    .box-wrap{ display:flex; justify-content:center; align-items:center; height:220px; }
+    .box{ width:120px; height:120px; border:2px solid #1c1d26; border-radius:14px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .phase{ margin-top:10px; text-align:center; font-weight:600; }
+    .kudos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .badge{ padding:.2rem .5rem; background:#f2f7ff; border:1px solid #dfe8ff; border-radius:999px; font-size:.8rem; color:#355; }
+    /* Checklist tabla */
+    .table{ width:100%; border-collapse:collapse; }
+    .table th, .table td{ border-bottom:1px solid #eee; padding:.5rem; text-align:left; }
+  </style>
 </head>
 <body class="is-preload">
   <!-- Header global -->
@@ -15,49 +41,291 @@
 
   <section id="header">
     <div class="inner">
-      <h1>Recursos recomendados</h1>
-      <p>Enlaces de afiliado y herramientas gratuitas que pueden ayudarte.</p>
+      <h1>Recursos gratuitos</h1>
+      <p>Herramientas prácticas para tu proceso, hechas para usarse aquí mismo.</p>
+      <div class="pill">Funciona offline</div>
+      <div class="pill">Guarda progreso local</div>
     </div>
   </section>
 
   <section id="one" class="main style1">
     <div class="container">
-      <h2>Libros</h2>
-      <ul>
-        <li>
-          📘 <a href="https://www.amazon.es/dp/XXXXXXXX?tag=TU_TAG_AFILIADO" rel="nofollow sponsored">Guía para recuperar tu voz</a>
-          <small>— Enlace de afiliado (apoya el proyecto sin costo extra).</small>
-        </li>
-      </ul>
 
-      <h2>Herramientas gratuitas</h2>
-      <ul>
-        <li>Plantilla de diario de límites (Notion) – <a href="https://notion.so" target="_blank" rel="noopener">Abrir</a></li>
-        <li>Checklist de señales de gaslighting (PDF) – <em>(próximamente)</em></li>
-      </ul>
+      <!-- 1) CHECKLIST DE BANDERAS ROJAS -->
+      <div class="tool-card" id="tool-flags">
+        <h2 class="tool-title">Checklist de banderas rojas</h2>
+        <p class="muted">Marca señales que hayas notado. El indicador se actualiza automáticamente. <span class="small">Tu selección se guarda en este navegador.</span></p>
+        <div class="row2">
+          <div>
+            <table class="table">
+              <thead><tr><th>Señal</th><th>¿La has visto?</th></tr></thead>
+              <tbody id="flags-body"></tbody>
+            </table>
+          </div>
+          <div>
+            <p><strong>Indicador de riesgo</strong></p>
+            <div class="meter"><span id="flags-meter"></span></div>
+            <p id="flags-score" class="small" style="margin-top:.5rem">0 de 0 marcadas</p>
+            <p id="flags-hint" class="muted"></p>
+            <div class="inline-controls" style="margin-top:.5rem">
+              <button class="btn ghost" id="flags-clear">Limpiar</button>
+              <button class="btn" id="flags-export">Exportar selección</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <h2>Apoya el proyecto</h2>
-      <p>El contenido es gratuito. Si te ayuda, puedes invitarme un café:</p>
-      <p>
-        <a href="https://ko-fi.com/TU_USUARIO" target="_blank" rel="noopener" class="button primary">Ko-fi</a>
-      </p>
+      <!-- 2) GENERADOR DE LÍMITES -->
+      <div class="tool-card" id="tool-boundaries">
+        <h2 class="tool-title">Generador de límites (frase lista para copiar)</h2>
+        <div class="inline-controls">
+          <label>Situación:
+            <select id="b-situation">
+              <option value="tono">Cuando el tono se vuelve despectivo</option>
+              <option value="mensajes">Mensajes fuera de horario</option>
+              <option value="invade">Invasión de privacidad</option>
+              <option value="promesas">Promesas incumplidas repetidas</option>
+            </select>
+          </label>
+          <label>Tono:
+            <select id="b-tone">
+              <option value="neutral">Neutral y claro</option>
+              <option value="firme">Firme</option>
+              <option value="empatico">Empático</option>
+            </select>
+          </label>
+          <button class="btn" id="b-generate">Generar</button>
+        </div>
+        <p class="small muted" style="margin:.5rem 0 0">Tip: un límite es observable y medible (qué harás si se cruza).</p>
+        <textarea id="b-output" rows="4" style="width:100%;margin-top:.75rem" placeholder="Aquí aparecerá tu límite..."></textarea>
+        <div style="margin-top:.5rem">
+          <button class="btn primary" id="b-copy">Copiar</button>
+          <span id="b-copied" class="copy-ok">¡Copiado!</span>
+        </div>
+      </div>
+
+      <!-- 3) CONTADOR DE DÍAS / STREAK -->
+      <div class="tool-card" id="tool-streak">
+        <h2 class="tool-title">Contador de días (No-Contact / hábito)</h2>
+        <div class="inline-controls">
+          <label>Fecha de inicio: <input type="date" id="s-start"></label>
+          <button class="btn" id="s-save">Guardar</button>
+          <button class="btn ghost" id="s-reset">Reiniciar</button>
+        </div>
+        <p style="margin-top:.5rem">Llevas <strong id="s-days">0</strong> día(s). <span id="s-phrase" class="muted"></span></p>
+        <div class="kudos" id="s-kudos"></div>
+      </div>
+
+      <!-- 4) RESPIRACIÓN 4-4-4 -->
+      <div class="tool-card" id="tool-breathe">
+        <h2 class="tool-title">Respiración 4-4-4 (box breathing)</h2>
+        <div class="box-wrap">
+          <div class="box" id="br-box">4</div>
+        </div>
+        <div class="phase" id="br-phase">Inhala</div>
+        <div style="text-align:center;margin-top:.5rem">
+          <button class="btn primary" id="br-start">Iniciar</button>
+          <button class="btn ghost" id="br-stop">Detener</button>
+        </div>
+        <p class="small muted" style="text-align:center;margin-top:.5rem">Ciclo: 4s Inhala · 4s Mantén · 4s Exhala. Repite 3–5 minutos.</p>
+      </div>
+
     </div>
   </section>
 
   <div id="site-footer"></div>
 
+  <!-- Scripts plantilla -->
   <script src="../assets/js/jquery.min.js"></script>
-  <script src="../assets/js/jquery.scrolly.min.js"></script>
   <script src="../assets/js/browser.min.js"></script>
   <script src="../assets/js/breakpoints.min.js"></script>
   <script src="../assets/js/util.js"></script>
   <script src="../assets/js/main.js"></script>
-  <script> (function(){var y=document.getElementById('year'); if(y){y.textContent=new Date().getFullYear();}})(); </script>
-  <!-- Header global -->
+
+  <!-- Header / Footer globales -->
   <script src="../assets/js/header.js" data-base="/sanandoando/"></script>
   <script src="../assets/js/footer.js"
-        data-base="/sanandoando/"
-        data-facebook="https://www.facebook.com/sanando.ando.ya"></script>
+          data-base="/sanandoando/"
+          data-facebook="https://www.facebook.com/sanando.ando.ya"></script>
 
+  <!-- Lógica de herramientas -->
+  <script>
+    // ---------- 1) CHECKLIST DE BANDERAS ROJAS ----------
+    (function(){
+      var FLAGS = [
+        "Minimiza o ridiculiza tus emociones",
+        "Cambia versiones de los hechos (gaslighting)",
+        "Te aísla de amistades o familia",
+        "Cruza límites que ya comunicaste",
+        "Promete cambiar sin evidencia de cambio",
+        "Controla tu tiempo, dinero o decisiones",
+        "Usa sarcasmo/desprecio como “broma”",
+        "Vive en modo víctima para evitar responsabilidad",
+        "Invade tu privacidad (teléfono, redes, mail)",
+        "Presiona para respuestas inmediatas a cualquier hora"
+      ];
+      var key = "sa_flags";
+      var saved = JSON.parse(localStorage.getItem(key) || "[]");
+      var body = document.getElementById('flags-body');
+      var meter = document.getElementById('flags-meter');
+      var score = document.getElementById('flags-score');
+      var hint  = document.getElementById('flags-hint');
+
+      function render(){
+        body.innerHTML = "";
+        FLAGS.forEach(function(txt, i){
+          var tr = document.createElement('tr');
+          var td1 = document.createElement('td'); td1.textContent = txt;
+          var td2 = document.createElement('td');
+          var cb = document.createElement('input'); cb.type='checkbox'; cb.checked = saved.indexOf(i)>-1;
+          cb.addEventListener('change', function(){
+            var idx = saved.indexOf(i);
+            if (cb.checked && idx===-1) saved.push(i);
+            if (!cb.checked && idx>-1) saved.splice(idx,1);
+            localStorage.setItem(key, JSON.stringify(saved));
+            updateMeter();
+          });
+          td2.appendChild(cb);
+          tr.appendChild(td1); tr.appendChild(td2);
+          body.appendChild(tr);
+        });
+        updateMeter();
+      }
+      function updateMeter(){
+        var pct = Math.round((saved.length / FLAGS.length) * 100);
+        meter.style.width = pct + '%';
+        score.textContent = saved.length + ' de ' + FLAGS.length + ' marcadas';
+        if (pct <= 25)      hint.textContent = "Riesgo bajo: sigue atento a los patrones.";
+        else if (pct <= 50) hint.textContent = "Riesgo moderado: considera límites claros y apoyo externo.";
+        else if (pct <= 75) hint.textContent = "Riesgo alto: prioriza tu seguridad emocional y busca orientación.";
+        else                hint.textContent = "Riesgo muy alto: considera plan de salida y apoyo profesional.";
+      }
+      document.getElementById('flags-clear').addEventListener('click', function(){
+        saved = []; localStorage.setItem(key, "[]"); render();
+      });
+      document.getElementById('flags-export').addEventListener('click', function(){
+        var selected = saved.map(function(i){ return FLAGS[i]; });
+        var blob = new Blob([JSON.stringify({selected:selected, total:FLAGS.length, date:new Date().toISOString()}, null, 2)], {type:"application/json"});
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'banderas_rojas.json';
+        a.click();
+      });
+      render();
+    })();
+
+    // ---------- 2) GENERADOR DE LÍMITES ----------
+    (function(){
+      var TEMPLATES = {
+        tono: {
+          neutral:  "Cuando el tono se vuelve despectivo, me retiro de la conversación. Podemos seguir cuando el trato sea respetuoso.",
+          firme:    "No toleraré un tono despectivo. Si sucede, terminaré la conversación y retomaré cuando podamos hablar con respeto.",
+          empatico: "Me afecta cuando el tono suena despectivo. Para cuidarme, pausaré la conversación y la retomamos con respeto."
+        },
+        mensajes: {
+          neutral:  "No respondo mensajes después de las 22:00. Si escribes en ese horario, te contestaré al día siguiente.",
+          firme:    "No contestaré mensajes fuera de horario. Si llegan, responderé al día siguiente.",
+          empatico: "Necesito descanso. Si me escribes tarde, te responderé mañana."
+        },
+        invade: {
+          neutral:  "No comparto contraseñas ni acceso a mis cuentas. Si se insiste, cortaré la conversación.",
+          firme:    "No permitiré invasión de mi privacidad. No compartiré contraseñas ni accesos.",
+          empatico: "Para sentirme seguro, necesito privacidad. No compartiré contraseñas ni acceso."
+        },
+        promesas: {
+          neutral:  "Cuando hay promesas que no se cumplen, replanteo mi participación. Necesito hechos consistentes.",
+          firme:    "Si las promesas no se cumplen repetidamente, me apartaré de esos acuerdos.",
+          empatico: "Me frustra cuando lo acordado no se cumple. Necesito consistencia para seguir."
+        }
+      };
+      var s = document.getElementById('b-situation');
+      var t = document.getElementById('b-tone');
+      var out = document.getElementById('b-output');
+      function gen(){
+        var txt = (TEMPLATES[s.value] && TEMPLATES[s.value][t.value]) || '';
+        out.value = txt;
+      }
+      document.getElementById('b-generate').addEventListener('click', gen);
+      document.getElementById('b-copy').addEventListener('click', function(){
+        out.select(); document.execCommand('copy');
+        var ok = document.getElementById('b-copied'); ok.style.display='inline';
+        setTimeout(function(){ ok.style.display='none'; }, 1400);
+      });
+      gen();
+    })();
+
+    // ---------- 3) CONTADOR DE DÍAS ----------
+    (function(){
+      var key = 'sa_streak_start';
+      var startInput = document.getElementById('s-start');
+      var daysEl = document.getElementById('s-days');
+      var phrase = document.getElementById('s-phrase');
+      var kudos = document.getElementById('s-kudos');
+
+      function load(){
+        var stored = localStorage.getItem(key);
+        if (stored) startInput.value = stored;
+        update();
+      }
+      function update(){
+        var v = startInput.value;
+        if (!v){ daysEl.textContent = '0'; phrase.textContent=''; kudos.innerHTML=''; return; }
+        var d0 = new Date(v+'T00:00:00');
+        var now = new Date();
+        var diff = Math.floor((now - d0) / (1000*60*60*24));
+        if (diff < 0) diff = 0;
+        daysEl.textContent = diff;
+        phrase.textContent = diff>=1 ? '¡Sigue así!' : 'Selecciona una fecha de inicio.';
+        renderBadges(diff);
+      }
+      function renderBadges(n){
+        var milestones = [1,3,7,14,21,30,60,90];
+        kudos.innerHTML = milestones.filter(function(m){ return n>=m; })
+          .map(function(m){ return '<span class="badge">🎉 ' + m + ' día' + (m>1?'s':'') + '</span>'; })
+          .join('');
+      }
+      document.getElementById('s-save').addEventListener('click', function(){
+        if (startInput.value){ localStorage.setItem(key, startInput.value); update(); }
+      });
+      document.getElementById('s-reset').addEventListener('click', function(){
+        localStorage.removeItem(key); startInput.value=''; update();
+      });
+      startInput.addEventListener('change', update);
+      load();
+    })();
+
+    // ---------- 4) RESPIRACIÓN 4-4-4 ----------
+    (function(){
+      var box = document.getElementById('br-box');
+      var phaseEl = document.getElementById('br-phase');
+      var timer = null;
+      var i = 0; // 0=inhala,1=mantén,2=exhala
+      var secs = 4, remain = 4;
+
+      function setPhase(p){
+        i = p; remain = secs;
+        var label = (i===0?'Inhala': i===1?'Mantén':'Exhala');
+        phaseEl.textContent = label;
+        box.style.transform = (i===0?'scale(1.06)': i===1?'scale(1.06)':'scale(0.94)');
+      }
+      function tick(){
+        box.textContent = remain;
+        remain--;
+        if (remain < 0){
+          setPhase((i+1)%3);
+        }
+      }
+      function start(){
+        stop(); setPhase(0); tick();
+        timer = setInterval(tick, 1000);
+      }
+      function stop(){
+        if (timer) clearInterval(timer);
+        timer = null; box.textContent = '4'; phaseEl.textContent = 'Inhala'; box.style.transform='scale(1)';
+      }
+      document.getElementById('br-start').addEventListener('click', start);
+      document.getElementById('br-stop').addEventListener('click', stop);
+    })();
+  </script>
 </body>
 </html>
