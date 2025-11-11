@@ -297,7 +297,6 @@
             if (!cb.checked && idx>-1) saved.splice(idx,1);
             localStorage.setItem(key, JSON.stringify(saved));
             updateMeter();
-            e.stopPropagation();
           });
           td2.appendChild(cb);
           tr.appendChild(td1); tr.appendChild(td2);
@@ -472,6 +471,7 @@
   </script>
 </body>
 </html>
+
 
 
 
